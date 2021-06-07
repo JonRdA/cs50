@@ -34,6 +34,8 @@ void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
 
+
+void arr1d(int arr[], int len);
 bool isin(string elem, string arr[], int size);
 int get_index(string elem, string arr[], int size);
 
@@ -44,10 +46,11 @@ int main(int argc, string argv[])
     // Beginning for testing
     candidate_count = 3;
     candidates[0] = "Alice";
-    candidates[1] = "Charlie";
-    candidates[2] = "Bob";
-    int voter_count = 9;
-    string votearray[9][3] = {
+    candidates[1] = "Bob";
+    candidates[2] = "Charlie";
+    int zvoter_count = 9;
+    int voter_count = 4;
+    string zvotearray[9][3] = {
         {"Alice", "Bob", "Charlie"},
         {"Alice", "Bob", "Charlie"},
         {"Alice", "Bob", "Charlie"},
@@ -57,7 +60,11 @@ int main(int argc, string argv[])
         {"Charlie", "Alice", "Bob"},
         {"Charlie", "Alice", "Bob"},
         {"Charlie", "Alice", "Bob"}};
-
+    string votearray[4][3] = {
+        {"Alice", "Charlie", "Bob"},
+        {"Alice", "Charlie", "Bob"},
+        {"Charlie", "Alice", "Bob"},
+        {"Bob", "Alice", "Charlie"}};
 
     // // Check for invalid usage
     // if (argc < 2)
@@ -101,7 +108,6 @@ int main(int argc, string argv[])
         {
             // string name = get_string("Rank %i: ", j + 1);
             string name = votearray[i][j];
-            // printf("%s\n", name);
 
             if (!vote(j, name, ranks))
             {
@@ -112,6 +118,13 @@ int main(int argc, string argv[])
 
         record_preferences(ranks);
     }
+    printf("[");
+    for (int i = 0; i < 3; i++)
+    {
+        arr1d(preferences[i], 3);
+    }
+    printf("]\n");
+
 
     add_pairs();
     sort_pairs();
@@ -136,9 +149,17 @@ bool vote(int rank, string name, int ranks[])
 // Update preferences given one voter's ranks
 void record_preferences(int ranks[])
 {
-    // TODO
-    return;
+    for (int i = 0; i < candidate_count - 1; i++)
+    {   
+        for (int j = i + 1; j < candidate_count; j++)
+        {
+            preferences[ranks[i]][ranks[j]]++;
+        }
+    }
+
 }
+  
+
 
 // Record pairs of candidates where one is preferred over the other
 void add_pairs(void)
@@ -195,3 +216,12 @@ int get_index(string elem, string arr[], int size)
     return false;
 }
 
+void arr1d(int arr[], int len)
+{
+    printf("[%i", arr[0]);
+    for (int i = 1; i < len; i++)
+    {
+        printf(", %i", arr[i]);
+    }
+    printf("]\n");
+}
