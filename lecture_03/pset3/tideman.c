@@ -34,7 +34,7 @@ void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
 
-
+void print_pair(pair p);
 void arr1d(int arr[], int len);
 bool isin(string elem, string arr[], int size);
 int get_index(string elem, string arr[], int size);
@@ -118,17 +118,9 @@ int main(int argc, string argv[])
 
         record_preferences(ranks);
     }
-
-    // Print the 2d preferences array, size 3 hardcoded
-    printf("[");
-    for (int i = 0; i < 3; i++)
-    {
-        arr1d(preferences[i], 3);
-    }
-    printf("]\n");
-
-
+    
     add_pairs();
+    printf("This is the pair count: %i\n", pair_count);
     sort_pairs();
     lock_pairs();
     print_winner();
@@ -160,8 +152,6 @@ void record_preferences(int ranks[])
     }
 
 }
-  
-
 
 // Record pairs of candidates where one is preferred over the other
 void add_pairs(void)
@@ -169,20 +159,23 @@ void add_pairs(void)
     // Loop through preferences and add
     for (int c1 = 0; c1 < candidate_count - 1; c1++)
     {
-        for (int c2 = c1 + 1; c2 < candidate_count - 1; c2++)
+        for (int c2 = c1 + 1; c2 < candidate_count; c2++)
         {
             int c1overc2 = preferences[c1][c2];
             int c2overc1 = preferences[c2][c1];
+
             if (c1overc2 > c2overc1)
             {
                 pairs[pair_count].winner = c1;
                 pairs[pair_count].loser = c2;
+//                print_pair(pairs[pair_count]);
                 pair_count++;
             }
             else if (c1overc2 < c2overc1)
             {
                 pairs[pair_count].winner = c2;
                 pairs[pair_count].loser = c1;
+//                print_pair(pairs[pair_count]);
                 pair_count++;
             }
         }
@@ -193,8 +186,17 @@ void add_pairs(void)
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    // TODO
-    return;
+    int max_index, temp, val_i;
+    for (int i = 0; i < pair_count; i++)
+    {
+        max_index = i; 
+        val_i = preferences[pairs[i].winner][pairs[i].loser] - preferences[pairs[i].loser][pairs[i].winner];
+ //       printf("Value of pair: %i\n", val_i);
+        for (int j = i; j < pair_count; j++)
+        {
+            int x = 7;
+        }
+    }
 }
 
 // Lock pairs into the candidate graph in order, without creating cycles
@@ -247,3 +249,9 @@ void arr1d(int arr[], int len)
     }
     printf("]\n");
 }
+
+void print_pair(pair p)
+{
+    printf("{winner: %i, loser: %i}\n", p.winner, p.loser);
+}
+
