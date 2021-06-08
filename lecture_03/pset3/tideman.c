@@ -118,6 +118,8 @@ int main(int argc, string argv[])
 
         record_preferences(ranks);
     }
+
+    // Print the 2d preferences array, size 3 hardcoded
     printf("[");
     for (int i = 0; i < 3; i++)
     {
@@ -164,9 +166,29 @@ void record_preferences(int ranks[])
 // Record pairs of candidates where one is preferred over the other
 void add_pairs(void)
 {
-    // TODO
-    return;
+    // Loop through preferences and add
+    for (int c1 = 0; c1 < candidate_count - 1; c1++)
+    {
+        for (int c2 = c1 + 1; c2 < candidate_count - 1; c2++)
+        {
+            int c1overc2 = preferences[c1][c2];
+            int c2overc1 = preferences[c2][c1];
+            if (c1overc2 > c2overc1)
+            {
+                pairs[pair_count].winner = c1;
+                pairs[pair_count].loser = c2;
+                pair_count++;
+            }
+            else if (c1overc2 < c2overc1)
+            {
+                pairs[pair_count].winner = c2;
+                pairs[pair_count].loser = c1;
+                pair_count++;
+            }
+        }
+    }
 }
+
 
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
