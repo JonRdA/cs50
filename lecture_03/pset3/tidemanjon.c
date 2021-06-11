@@ -46,46 +46,46 @@ int main(int argc, string argv[])
 {
 
     // Beginning for testing
-//    candidate_count = 3;
-//    candidates[0] = "Alice";
-//    candidates[1] = "Bob";
-//    candidates[2] = "Charlie";
-//    int voter_count = 9;
-//    int zvoter_count = 4;
-//    string votearray[9][3] = {
-//        {"Alice", "Bob", "Charlie"},
-//        {"Alice", "Bob", "Charlie"},
-//        {"Alice", "Bob", "Charlie"},
-//        {"Bob", "Charlie", "Alice"},
-//        {"Bob", "Charlie", "Alice"},
-//        {"Charlie", "Alice", "Bob"},
-//        {"Charlie", "Alice", "Bob"},
-//        {"Charlie", "Alice", "Bob"},
-//        {"Charlie", "Alice", "Bob"}};
+    candidate_count = 3;
+    candidates[0] = "Alice";
+    candidates[1] = "Bob";
+    candidates[2] = "Charlie";
+    int voter_count = 9;
+    int zvoter_count = 4;
+    string votearray[9][3] = {
+        {"Alice", "Bob", "Charlie"},
+        {"Alice", "Bob", "Charlie"},
+        {"Alice", "Bob", "Charlie"},
+        {"Bob", "Charlie", "Alice"},
+        {"Bob", "Charlie", "Alice"},
+        {"Charlie", "Alice", "Bob"},
+        {"Charlie", "Alice", "Bob"},
+        {"Charlie", "Alice", "Bob"},
+        {"Charlie", "Alice", "Bob"}};
 //    string votearray[4][3] = {
 //        {"Alice", "Charlie", "Bob"},
 //        {"Alice", "Charlie", "Bob"},
 //        {"Charlie", "Alice", "Bob"},
 //        {"Bob", "Alice", "Charlie"}};
 
-    // Check for invalid usage
-     if (argc < 2)
-     {
-         printf("Usage: tideman [candidate ...]\n");
-         return 1;
-     }
+    // // Check for invalid usage
+    // if (argc < 2)
+    // {
+    //     printf("Usage: tideman [candidate ...]\n");
+    //     return 1;
+    // }
 
-     // Populate array of candidates
-     candidate_count = argc - 1;
-     if (candidate_count > MAX)
-     {
-         printf("Maximum number of candidates is %i\n", MAX);
-         return 2;
-     }
-     for (int i = 0; i < candidate_count; i++)
-     {
-         candidates[i] = argv[i + 1];
-     }
+    // // Populate array of candidates
+    // candidate_count = argc - 1;
+    // if (candidate_count > MAX)
+    // {
+    //     printf("Maximum number of candidates is %i\n", MAX);
+    //     return 2;
+    // }
+    // for (int i = 0; i < candidate_count; i++)
+    // {
+    //     candidates[i] = argv[i + 1];
+    // }
 
     // Clear graph of locked in pairs
     for (int i = 0; i < candidate_count; i++)
@@ -97,7 +97,7 @@ int main(int argc, string argv[])
     }
 
     pair_count = 0;
-     int voter_count = get_int("Number of voters: ");
+    // int voter_count = get_int("Number of voters: ");
 
     // Query for votes
     for (int i = 0; i < voter_count; i++)
@@ -108,8 +108,8 @@ int main(int argc, string argv[])
         // Query for each rank
         for (int j = 0; j < candidate_count; j++)
         {
-             string name = get_string("Rank %i: ", j + 1);
-//            string name = votearray[i][j];
+            // string name = get_string("Rank %i: ", j + 1);
+            string name = votearray[i][j];
 
             if (!vote(j, name, ranks))
             {
@@ -121,11 +121,26 @@ int main(int argc, string argv[])
         record_preferences(ranks);
     } 
 
+//    preferences[2][1] = 9;
 
     add_pairs();
+
+//    print_pairs();
+
     sort_pairs();
 
+//    print_pairs();
+//    for (int i = 0; i < candidate_count; i++)
+//    {
+//        arr1d(locked[i], 3);
+//    }
+//
     lock_pairs();
+//
+//    for (int i = 0; i < candidate_count; i++)
+//    {
+//        arr1d(locked[i], 3);
+//    }
     print_winner();
     return 0;
 }
