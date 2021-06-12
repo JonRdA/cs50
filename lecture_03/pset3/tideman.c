@@ -34,6 +34,8 @@ void sort_pairs(void);
 void lock_pairs(void);
 void print_winner(void);
 
+bool looper(void);
+bool loop(int depth, int cand);
 void print_pairs(void);
 int get_val(pair p);
 void print_pair(pair p);
@@ -46,46 +48,46 @@ int main(int argc, string argv[])
 {
 
     // Beginning for testing
-//    candidate_count = 3;
-//    candidates[0] = "Alice";
-//    candidates[1] = "Bob";
-//    candidates[2] = "Charlie";
-//    int voter_count = 9;
-//    int zvoter_count = 4;
-//    string votearray[9][3] = {
-//        {"Alice", "Bob", "Charlie"},
-//        {"Alice", "Bob", "Charlie"},
-//        {"Alice", "Bob", "Charlie"},
-//        {"Bob", "Charlie", "Alice"},
-//        {"Bob", "Charlie", "Alice"},
-//        {"Charlie", "Alice", "Bob"},
-//        {"Charlie", "Alice", "Bob"},
-//        {"Charlie", "Alice", "Bob"},
-//        {"Charlie", "Alice", "Bob"}};
+    candidate_count = 3;
+    candidates[0] = "Alice";
+    candidates[1] = "Bob";
+    candidates[2] = "Charlie";
+    int voter_count = 9;
+    int zvoter_count = 4;
+    string votearray[9][3] = {
+        {"Alice", "Bob", "Charlie"},
+        {"Alice", "Bob", "Charlie"},
+        {"Alice", "Bob", "Charlie"},
+        {"Bob", "Charlie", "Alice"},
+        {"Bob", "Charlie", "Alice"},
+        {"Charlie", "Alice", "Bob"},
+        {"Charlie", "Alice", "Bob"},
+        {"Charlie", "Alice", "Bob"},
+        {"Charlie", "Alice", "Bob"}};
 //    string votearray[4][3] = {
 //        {"Alice", "Charlie", "Bob"},
 //        {"Alice", "Charlie", "Bob"},
 //        {"Charlie", "Alice", "Bob"},
 //        {"Bob", "Alice", "Charlie"}};
 
-    // Check for invalid usage
-     if (argc < 2)
-     {
-         printf("Usage: tideman [candidate ...]\n");
-         return 1;
-     }
+    // // Check for invalid usage
+    // if (argc < 2)
+    // {
+    //     printf("Usage: tideman [candidate ...]\n");
+    //     return 1;
+    // }
 
-     // Populate array of candidates
-     candidate_count = argc - 1;
-     if (candidate_count > MAX)
-     {
-         printf("Maximum number of candidates is %i\n", MAX);
-         return 2;
-     }
-     for (int i = 0; i < candidate_count; i++)
-     {
-         candidates[i] = argv[i + 1];
-     }
+    // // Populate array of candidates
+    // candidate_count = argc - 1;
+    // if (candidate_count > MAX)
+    // {
+    //     printf("Maximum number of candidates is %i\n", MAX);
+    //     return 2;
+    // }
+    // for (int i = 0; i < candidate_count; i++)
+    // {
+    //     candidates[i] = argv[i + 1];
+    // }
 
     // Clear graph of locked in pairs
     for (int i = 0; i < candidate_count; i++)
@@ -97,7 +99,7 @@ int main(int argc, string argv[])
     }
 
     pair_count = 0;
-     int voter_count = get_int("Number of voters: ");
+    // int voter_count = get_int("Number of voters: ");
 
     // Query for votes
     for (int i = 0; i < voter_count; i++)
@@ -108,8 +110,8 @@ int main(int argc, string argv[])
         // Query for each rank
         for (int j = 0; j < candidate_count; j++)
         {
-             string name = get_string("Rank %i: ", j + 1);
-//            string name = votearray[i][j];
+            // string name = get_string("Rank %i: ", j + 1);
+            string name = votearray[i][j];
 
             if (!vote(j, name, ranks))
             {
@@ -121,11 +123,26 @@ int main(int argc, string argv[])
         record_preferences(ranks);
     } 
 
+//    preferences[2][1] = 9;
 
     add_pairs();
+
+//    print_pairs();
+
     sort_pairs();
 
+//    print_pairs();
+//    for (int i = 0; i < candidate_count; i++)
+//    {
+//        arr1d(locked[i], 3);
+//    }
+//
     lock_pairs();
+//
+//    for (int i = 0; i < candidate_count; i++)
+//    {
+//        arr1d(locked[i], 3);
+//    }
     print_winner();
     return 0;
 }
@@ -185,30 +202,22 @@ void add_pairs(void)
     }
 }
 
-
-// Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    int min_index;
-    pair temp;
+    pair tmp;
     for (int i = 0; i < pair_count; i++)
     {
-        min_index = i; 
-
-        for (int j = i + 1; j < pair_count; j++)
+        for (int j = 0; j < pair_count - i; j++)
         {
-            if (get_val(pairs[j]) > get_val(pairs[min_index]))
+            if (get_val(pairs[j]) < get_val(pairs[j + 1]))
             {
-                min_index = j;
+                tmp = pairs[j];
+                pairs[j] = pairs[1 + j];
+                pairs[j + 1] = tmp;
             }
-        temp = pairs[min_index];
-        pairs[min_index] = pairs[i];
-        pairs[i] = temp;
-//        printf("sort_pairs: swaping %i with %i\n", i, min_index);
         }
     }
 }
-
 
 
 // Lock pairs into the candidate graph in order, without creating cycles
@@ -220,17 +229,10 @@ void lock_pairs(void)
         bool loop = false;  // Flag for existing loop
         w = pairs[i].winner;
         l = pairs[i].loser;
-        for (int j = 0; j < candidate_count; j++)
+        locked[w][l] = true;
+        if (looper())
         {
-            if (locked[i][j])
-            {
-                loop = true;
-            }
-        }
-        
-        if (!loop)
-        {
-            locked[w][l] = true;
+            locked[w][l] = false;
         }
     }
     return;
@@ -318,4 +320,39 @@ void print_pairs(void)
         printf("\tvalue: %i\n", get_val(pairs[i]));
     }
     printf("]\n");
+}
+bool looper(void)
+{   
+    for (int cand = 0; cand < candidate_count; cand++)
+    {
+        if (loop(0, cand))
+        {
+            return true;
+        }
+//        printf("--------------------\n");
+    }
+    return false;
+}
+
+bool loop(int depth, int cand)
+{
+//    printf("Entering loop, depth: %i, cand:%i\n", depth, cand);
+    if (depth > candidate_count)
+    {
+//       printf("Returning loop, depth: %i, cand:%i, return: 'true', maxdepth reached\n", depth, cand);
+        return true;
+    }    
+    
+    for (int i = 0; i < candidate_count; i++)
+    {
+        if (locked[cand][i])
+        {
+            if (loop(depth + 1, i))
+            {
+                return true;
+            }
+        }
+    }
+//   printf("Returning loop, depth: %i, cand:%i, return: 'false', nowhere to go\n", depth, cand);
+    return false;
 }
