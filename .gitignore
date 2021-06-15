@@ -7,5 +7,9 @@
 # Uningnore all dirs
 !*/
 
-# Ignore images
+# Images
 *.bmp
+**/images
+
+# Output files
+out.*

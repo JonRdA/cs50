@@ -1,8 +1,7 @@
+#include "helpers.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-
-#include "helpers.h"
 
 // Sub image parts to be used
 typedef struct grid
@@ -47,7 +46,7 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
 int gray_avg(RGBTRIPLE pixel)
 {
     // Extract all 3 colors and return rounded mean
-    int r, g, b;
+    float r, g, b;
     r = pixel.rgbtRed;
     g = pixel.rgbtGreen;
     b = pixel.rgbtBlue;
@@ -90,7 +89,7 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 }
 
 
-// -------------------- Reflection filter --------------------
+// -------------------- Blur filter --------------------
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
@@ -105,20 +104,6 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
         }
     }
     return;
-    
-   // RGBTRIPLE *p = grid(height, width, image, 100, 100, 3);
-
-    grid g = get_grid(height, width, image, 100, 100, 3);
-    RGBTRIPLE average = grid_avg(g);
-    printf("The result average pixes is:");
-    print_pixel(average);
-    int *red = grid_r(g);
-    for (int i = 0; i < g.size; i++)
-    {
-        printf("%i\n", red[i]);
-    }
-    int avg = cgrid_avg(red, g.size);
-    printf("Average value: %i\n", avg);
 }
 
 // Create a (n * n) grid of pixels in pixel (r, c) (row, column)
@@ -133,9 +118,9 @@ grid get_grid(int height, int width, RGBTRIPLE image[height][width], int r, int 
 
     // Check for border collision
     r0 = r0 < 0 ? 0 : r0;
-    r1 = r1 > height ? height : r1;
+    r1 = r1 >= height ? height - 1: r1;
     c0 = c0 < 0 ? 0 : c0;
-    c1 = c1 > width ? width : c1;
+    c1 = c1 >= width ? width - 1 : c1;
     
     // Grid width & height
     int w = c1 - c0 + 1;
@@ -209,7 +194,7 @@ int *grid_b(grid g)
 // Obtain mean value of a colorgrid's (cgrid) color (array) of size n
 int cgrid_avg(int *cgrid, int size)
 {
-    int sum = 0;
+    float sum = 0;
     for (int i = 0; i < size; i++)
     {
         sum += cgrid[i];
