@@ -6,3 +6,6 @@
 
 # Uningnore all dirs
 !*/
+
+# Ignore images
+*.bmp

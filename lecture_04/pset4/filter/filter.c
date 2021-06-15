@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     char *filters = "begr";
-    char filter = 'r';
+    char filter = 'b';
 // ===========================================================================
 //    // Define allowable filters
 //    char *filters = "begr";
