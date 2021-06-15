@@ -93,16 +93,34 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
-    // Iterate over all pixels and turn them gray
+    // Create temporal copy from which to take values
+    RGBTRIPLE(*tmp)[width] = calloc(height, width * sizeof(RGBTRIPLE));
+    if (tmp == NULL)
+    {
+        printf("Not enough memory");
+        return;
+    }
+    
+    // Copy all the image to temporal
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            grid g = get_grid(height, width, image, i, j, 3);
+            tmp[i][j] = image[i][j];
+        }
+    }
+
+    // Iterate over all pixels and calculate their mean
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            grid g = get_grid(height, width, tmp, i, j, 3);
             image[i][j] = grid_avg(g);
             free(g.pixels);
         }
     }
+    free(tmp);
     return;
 }
 
