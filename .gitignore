@@ -9,7 +9,9 @@
 
 # Images
 *.bmp
+*.jpg
 **/images
 
 # Output files
 out.*
+
