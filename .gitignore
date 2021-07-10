@@ -14,4 +14,7 @@
 
 # Output files
 out.*
+*.o
 
+# Text
+*.txt

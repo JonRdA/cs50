@@ -16,8 +16,10 @@ node;
 node *create(int num);
 void print_list(node *list);
 void append(node *list, int num);
+void insert(node **list, int num);
 bool search(node *list, int num);
-void delete(node *list, int num);
+void pop(node **list, int num);
+void delete(node *list);
 
 int main(void)
 {
@@ -26,10 +28,13 @@ int main(void)
     append(a, 3);
     append(a, 4);
     append(a, 5);
+    insert(&a, 0);
     print_list(a);
-    delete(a, 1);
-    //delete(a, 1);
+    pop(&a, 1);
+    pop(&a, 0);
+    pop(&a, 5);
     print_list(a);
+    delete(a);
 }
 
 // Initial node creation function
@@ -58,6 +63,14 @@ void append(node *list, int num)
     }
     // Now tmp points to the last element, extend list pointing to new node
     tmp->next = n;
+}
+
+// Add element at begginning of list
+void insert(node **list, int num)
+{
+    node *n = create(num);
+    n->next = *list;
+    *list = n;
 }
 // Print linked list by following pointers and printing the number.
 void print_list(node *list)
@@ -88,32 +101,44 @@ bool search(node *list, int num)
 }
 
 // Delete element from list, if contained
-void delete(node *list, int num)
+void pop(node **list, int num)
 {
-    node *tmp = list;
+    node *tmp = *list;
     node *tmp0 = NULL;      // Previous node
     while (tmp != NULL)
     {
-        printf("Current element: %i\n", tmp->number);
         if (tmp->number == num)
         {
             // If deleting node is the first
             if (tmp0 == NULL)
             {
                 // Won't work, list is a copy of pointer list
-                list = list->next;
-                printf("Inner list: ");
-                print_list(list);
+                *list = (*list)->next;
+                print_list(*list);
             }
             else
             {
                 tmp0->next = tmp->next;
-                free(tmp);
             }
+            free(tmp);
             return;
         }
         // Edge case is when tmp0 is null
         tmp0 = tmp;
         tmp = tmp->next;
+    }
+}
+
+// Recursively delete entire list
+void delete(node *list)
+{
+    if (list->next == NULL)
+    {
+        free(list);
+    }
+    else
+    {
+        delete(list->next);
+        free(list);
     }
 }
