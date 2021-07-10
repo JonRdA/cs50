@@ -12,8 +12,7 @@
 #undef getrusage
 
 // Default dictionary
-//#define DICTIONARY "dictionaries/large"******************************
-#define DICTIONARY "dictionaries/small"
+#define DICTIONARY "dictionaries/large"
 
 // Prototype
 double calculate(const struct rusage *b, const struct rusage *a);
@@ -21,8 +20,7 @@ double calculate(const struct rusage *b, const struct rusage *a);
 int main(int argc, char *argv[])
 {
     // Check for correct number of args
-    //if (argc != 2 && argc != 3)****************************************
-    if (3 > 8)
+    if (argc != 2 && argc != 3)
     {
         printf("Usage: ./speller [DICTIONARY] text\n");
         return 1;
@@ -53,8 +51,7 @@ int main(int argc, char *argv[])
     time_load = calculate(&before, &after);
 
     // Try to open text
-    //char *text = (argc == 3) ? argv[2] : argv[1];**************************
-    char *text = "texts/bible.txt";
+    char *text = (argc == 3) ? argv[2] : argv[1];
     FILE *file = fopen(text, "r");
     if (file == NULL)
     {
