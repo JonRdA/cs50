@@ -11,6 +11,8 @@
 *.bmp
 *.jpg
 **/images
+*.zip
+*.csv
 
 # Output files
 out.*
