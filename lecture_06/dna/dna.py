@@ -20,13 +20,19 @@ def main():
     if len(sys.argv) != 3:
         print("Usage: dna.py database sequence")
     else:
+
+        # Read input files.
         data_f, seq_f = sys.argv[1:3]
-        seq = read_sequence(seq_f)
-        print(seq)
-        b = count_max(seq, "AGAT")
-        b = count_max(seq, "AATG")
-        b = count_max(seq, "TATC")
-        print(b)
+        seq_raw = read_sequence(seq_f)
+        db = read_database(data_f)
+
+        # Create dictionary with max repeated seqs.
+        seq = {}
+        strs = list(db[0].keys())[1:]
+        for st in strs:
+            max_repeat = count_max(seq_raw, st)
+            seq[st] = max_repeat
+        print(match(db, seq))
 
 def read_database(data_f):
     """Read database file as list of dicts.
@@ -42,7 +48,7 @@ def read_database(data_f):
     return database
 
 def read_sequence(seq_f):
-    """Read sequence file & return dictionary with max counts.
+    """Read sequence file & return formatted string.
 
     Args:
         seq_f (str): sequences file
@@ -71,12 +77,10 @@ def count_max(sequence, subset):
     i = 0
     while i <= len(sequence) - len(subset):
         sub = sequence[i: i + len(subset)]
-        print(f"i: {i}, subset: {sub}")
 
         # Found a match
         if subset == sub:
             founds += 1
-            print(f"i: {i}, subset: {sub}, Found it!!, founds: {founds}")
             i += len(subset)
 
         else:
@@ -85,9 +89,26 @@ def count_max(sequence, subset):
                 founds = 0
             i += 1
 
-    print(repeated)
     return max(repeated)
 
+def match(db, seq):
+    """Find a match of the sequence in the database
+
+    Args:
+        db (dict): database of person's dna containing STR repetitions.
+        seq (dict): max STR repetitions found in sequence.
+
+    Returns:
+        person (string): name of person that matches, otherwise empty string.
+    """
+    for i in db:
+        flag = 0
+        for key, val in seq.items():
+            if int(i[key]) == val:
+                flag += 1
+        if flag == len(seq):
+            return i['name']
+    return 'No match'
 
 if __name__ == "__main__":
     main()
